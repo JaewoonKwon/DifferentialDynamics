@@ -1,14 +1,16 @@
 function state = solveRecursiveDynamics_single(pos, vel, acc, Phi, A_screw, initialLinkFrames, Vdot0, F_ext)
 
+%  (Abbreviation: "ExpBodyFr" = each expressed in the respective link body frame.)
+
 % % INPUTS
 % pos: joint angle (1 x n)
 % vel: joint velocity (1 x n)
 % acc: joint acceleration (1 x n)
-% Phi: inertia (10n x 1)
-% A_screw: joint twists (6 x n)
+% Phi: inertia (ExpBodyFr, 10n x 1)
+% A_screw: joint twists (ExpBodyFr, 6 x n)
 % initialLinkFrames: initial link frames (at the zero configuration)
-% Vdot0: acceleration of the base (only gravity if fixed-base)
-% F_ext: contact force wrench exerted on the end-effector
+% Vdot0: acceleration of the base (ExpBodyFr, only gravity if fixed-base)
+% F_ext: contact force wrench exerted on the end-effector (expr. in the last link frame)
 
 % % OUTPUTS
 % "state" containing the followings:
@@ -16,9 +18,10 @@ function state = solveRecursiveDynamics_single(pos, vel, acc, Phi, A_screw, init
 % jointVel: joint velocity (same as input 'vel')
 % jointAcc: joint acceleration (same as input 'acc')
 % linkFrames: initial link frames (same as input 'initialLinkFrames')
-% V: link body velocities (6 x n)
-% Vdot: link body accelerations (6 x n)
-% F: link body force wrenches (6 x n)
+% V: link body velocities (ExpBodyFr, 6 x n)
+% Vdot: link body accelerations (ExpBodyFr, 6 x n)
+% F: link body force wrenches (ExpBodyFr, 6 x n)
+%      ((i-th col.) F_i denotes the force exerted on link i by link i-1) 
 % W: regressor of the link forces (6n x 10n)
 % Y: regressor of the joint torques (6 x 10n)
 % jointTorque: joint torque (1 x n)
@@ -36,7 +39,7 @@ if any(size(A_screw) ~= [6, nJoint]) || length(initialLinkFrames) ~= nJoint
     size(initialLinkFrames)
     error('Error 2')
 end
-if any(size(Vdot0) ~= [6, 1]) ||any(size(F_ext) ~= [1, 6])
+if any(size(Vdot0) ~= [6, 1]) ||any(size(F_ext) ~= [6, 1])
     size(Vdot0)
     size(F_ext)
     error('Error 3')
@@ -72,7 +75,7 @@ for i=1:nJoint
     Vdot(:,i) = Vdot_i;
 end
 % Backward: F, torque, R_cell
-F_child = F_ext';
+F_child = zeros(6,1);
 W = zeros(6 * nJoint, 10 * nJoint);
 Y = zeros(nJoint, 10 * nJoint);
 for i=nJoint:-1:1
@@ -98,7 +101,11 @@ for i=nJoint:-1:1
     end
     Y(i,:) = A_i' * W(6*(i-1)+1:6*i,:);
     % F, torque
-    F_i = AdjInvT_ip1' * F_child + G_i * Vdot_i - adV_i' * G_i * V_i;
+    if i==nJoint
+        F_i = G_i * Vdot_i - adV_i' * G_i * V_i - F_ext;
+    else
+        F_i = G_i * Vdot_i - adV_i' * G_i * V_i + AdjInvT_ip1' * F_child;
+    end
     tau_i = A_i' * F_i;
     % log
     F_child = F_i;

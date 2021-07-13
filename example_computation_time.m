@@ -17,7 +17,7 @@ initialRobot = getRobot(true);
 nJoint = size(initialRobot.screw,2);
 Vdot0 = [0 0 0 0 9.81 0]';
 initialLinkFrames = mat2cell(repmat(eye(4),nJoint,1),ones(nJoint,1)*4, 4);
-F_ext = zeros(1,6);
+F_ext = zeros(6,1);
 if useSimplifiedMesh
     linkMeshNames = {'link1.ply', 'link2.ply', 'link3.ply', 'link4.ply', 'link5.ply', 'link6.ply'};
 else

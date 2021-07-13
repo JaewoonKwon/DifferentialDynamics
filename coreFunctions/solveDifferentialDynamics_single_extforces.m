@@ -1,4 +1,4 @@
-function state = solveDifferentialDynamics_single(pos, vel, acc, Phi, A_screw, initialLinkFrames, Vdot0, F_ext)
+function state = solveDifferentialDynamics_single_extforces(pos, vel, acc, Phi, A_screw, initialLinkFrames, Vdot0, F_ext)
 
 %  (Abbreviation: "ExpBodyFr" = each expressed in the respective link body frame.)
 
@@ -10,7 +10,7 @@ function state = solveDifferentialDynamics_single(pos, vel, acc, Phi, A_screw, i
 % A_screw: joint twists (ExpBodyFr, 6 x n)
 % initialLinkFrames: initial link frames (at the zero configuration)
 % Vdot0: acceleration of the base (ExpBodyFr, only gravity if fixed-base)
-% F_ext: contact force wrench exerted on the end-effector (expr. in the last link frame)
+% F_ext: external force wrenches exerted on each link (ExpBodyFr, 6 x n)
 
 % % OUTPUTS
 % "state" containing the followings:
@@ -43,7 +43,7 @@ if any(size(A_screw) ~= [6, nJoint]) || length(initialLinkFrames) ~= nJoint
     size(initialLinkFrames)
     error('Error 2')
 end
-if any(size(Vdot0) ~= [6, 1]) ||any(size(F_ext) ~= [6, 1])
+if any(size(Vdot0) ~= [6, 1]) ||any(size(F_ext) ~= [6, nJoint])
     size(Vdot0)
     size(F_ext)
     error('Error 3')
@@ -124,11 +124,8 @@ for i=nJoint:-1:1
     end
     Y(i,:) = A_i' * W(6*(i-1)+1:6*i,:);
     % F, torque
-    if i==nJoint
-        F_i = G_i * Vdot_i - adV_i' * G_i * V_i - F_ext;
-    else
-        F_i = G_i * Vdot_i - adV_i' * G_i * V_i + AdjInvT_ip1' * F_child;
-    end
+    % G Vdot - adV' G V = net force (F_i, F_child, F_ext)
+    F_i = AdjInvT_ip1' * F_child + G_i * Vdot_i - adV_i' * G_i * V_i - F_ext(:, i);
     tau_i = A_i' * F_i;
     % R
     Rr = getRr(i, nJoint, T_ip1, F_child, A_ip1);
