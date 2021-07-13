@@ -4,7 +4,7 @@ A recursive algorithm for differential dynamics with respect to both joint twist
 
 ## Dynamics
 
-The Lie group formulation of Newton-Euler recursive inverse dynamics is implemented in "solveRecursiveDynamics_single.m" and its differential version is in "solveDifferentialDynamics_single.m". It computes body velocities, accelerations and force wrenches (and their derivaties w.r.t. joint twists) of each link.
+The Lie group formulation of Newton-Euler recursive inverse dynamics is implemented in ["solveRecursiveDynamics_single.m"](https://github.com/JaewoonKwon/DifferentialDynamics/blob/main/coreFunctions/solveRecursiveDynamics_single.m) and its differential version is in ["solveDifferentialDynamics_single.m"](https://github.com/JaewoonKwon/DifferentialDynamics/blob/main/coreFunctions/solveDifferentialDynamics_single.m). It computes body velocities, accelerations and force wrenches (and their derivaties w.r.t. joint twists) of each link.
 
 ## Mesh Inertia
 
@@ -14,4 +14,4 @@ The Lie group formulation of Newton-Euler recursive inverse dynamics is implemen
 
 Jaewoon Kwon, Seunghyun Kim, and Frank C. Park, "A Fast and Reliable Co-Optimization of Robot Design and Motion" (in-progress).
 
-Jaewoon Kwon, Keunjun Choi, and Frank C. Park. "Kinodynamic Model Identification: A Unified Geometric Approach." IEEE Transactions on Robotics (2021).
+Jaewoon Kwon, Keunjun Choi, and Frank C. Park. ["Kinodynamic Model Identification: A Unified Geometric Approach."](https://ieeexplore.ieee.org/abstract/document/9351641?casa_token=ufdh-MhnLvwAAAAA:Rqpeux3jnJVOUiNs0VMrMc5rZ9KeBV6YwLCl5IC_y4Nywt-G7kYAeyZ0bhXCx41V0XbAtqxm) IEEE Transactions on Robotics (2021).
