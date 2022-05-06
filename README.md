@@ -12,6 +12,6 @@ The Lie group formulation of Newton-Euler recursive inverse dynamics is implemen
 
 ## Related Publications:
 
-Jaewoon Kwon, Seunghyun Kim, and Frank C. Park, "A Fast and Reliable Co-Optimization of Robot Design and Motion" (in-progress).
+Jaewoon Kwon, Seunghyun Kim, and Frank C. Park, "Physically Consistent Lie Group Mesh Models for Robot Design and Motion Co-Optimization", (submitted to RA-L).
 
 Jaewoon Kwon, Keunjun Choi, and Frank C. Park. ["Kinodynamic Model Identification: A Unified Geometric Approach."](https://ieeexplore.ieee.org/abstract/document/9351641?casa_token=ufdh-MhnLvwAAAAA:Rqpeux3jnJVOUiNs0VMrMc5rZ9KeBV6YwLCl5IC_y4Nywt-G7kYAeyZ0bhXCx41V0XbAtqxm) IEEE Transactions on Robotics (2021).
